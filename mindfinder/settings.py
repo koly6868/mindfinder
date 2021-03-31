@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'user_service.apps.UserServiceConfig',
     'django_neomodel',
-    'user_service'
 ]
 
 MIDDLEWARE = [
@@ -93,7 +93,7 @@ NEOMODEL_NEO4J_BOLT_URL = os.environ.get('NEO4J_BOLT_URL','bolt://username:passw
 # you are free to add this configurations
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
-NEOMODEL_ENCRYPTED_CONNECTION = True
+NEOMODEL_ENCRYPTED_CONNECTION = False
 NEOMODEL_MAX_POOL_SIZE = 50
 
 # Password validation

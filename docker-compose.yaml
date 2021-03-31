@@ -18,8 +18,11 @@ services:
         image : amd64/neo4j
         volumes:
             - ./data/neobase:/data
+        env_file:
+            - .env
         ports:
             - "7687:7687"
+            - "7474:7474"
     
     postgres:
         image: postgres
@@ -50,6 +53,20 @@ services:
             context: .
             dockerfile: Dockerfile
         command: "python manage.py migrate"
+        volumes:
+            - .:/app
+        env_file:
+            - .env
+        depends_on: 
+            - neobase
+            - postgres
+
+    install_labels:
+        image: "mindfiner"
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        command: "python manage.py install_labels"
         volumes:
             - .:/app
         env_file:
