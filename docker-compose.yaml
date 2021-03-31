@@ -1,0 +1,62 @@
+version: "3.0"
+
+services:
+    mindfiner:
+        image: "mindfiner"
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+            - .env
+        depends_on: 
+            - neobase
+            - postgres
+        ports:
+            - "8000:8000"
+    
+    neobase:
+        image : amd64/neo4j
+        volumes:
+            - ./data/neobase:/data
+        ports:
+            - "7687:7687"
+    
+    postgres:
+        image: postgres
+        env_file:
+            - .env
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+    
+    makemigrations:
+        image: "mindfiner"
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        command: "python manage.py makemigrations"
+        volumes:
+            - .:/app
+        env_file:
+            - .env
+        depends_on: 
+            - neobase
+            - postgres
+    
+    migrate:
+        image: "mindfiner"
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        command: "python manage.py migrate"
+        volumes:
+            - .:/app
+        env_file:
+            - .env
+        depends_on: 
+            - neobase
+            - postgres
+        
+    
+    
