@@ -15,7 +15,7 @@ services:
             - "8000:8000"
     
     neobase:
-        image : amd64/neo4j
+        image : amd64/neo4j:3.5
         volumes:
             - ./data/neobase:/data
         env_file:

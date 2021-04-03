@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'user_service.apps.UserServiceConfig',
+    'user_service',
     'django_neomodel',
 ]
 
@@ -133,3 +133,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGIN_URL = 'user_service:signin'
