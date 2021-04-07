@@ -1,0 +1,30 @@
+<html>
+{% load static %}
+    <head>
+      <title>FindMind</title>
+      <link rel="stylesheet" href="{% static 'mindfinder/style.css' %}">
+    </head>
+    <body>
+        <div class="head">
+            <div class="right">
+                <div class="otstup-menu">
+                    <a href="{% url 'chat_service:chats' %}" class="btnfulled">Мессенджер</a>
+                    <a href="{% url 'user_service:profile' %}" class="btnfulled">Профиль</a>
+                    <a class="btnfulled">Тест</a>
+                    <a href="{% url 'chat_service:new' %}" class="btnfulled">Рекомендации</a>
+                    <a href="{% url 'user_service:logout' %}" class="btnfulled">Выход</a>
+                </div>
+                
+                <button class="btnimg">
+                    <img class="avatar" data-role="user-avatar" src="{{ avatar_url }}" alt="Аватар">     
+                </button> 
+                
+            </div>
+        </div>
+        <div class="otstup-head">
+        </div>
+            {% block content %}
+            content
+            {% endblock %}
+    </body>   
+</html>

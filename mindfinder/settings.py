@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'user_service',
     'chat_service',
     'polls_service',
+    'mindfinder',
     'django_neomodel',
 ]
 
@@ -65,6 +66,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mindfinder.context_preprocessors.add_media_settings',
+                'user_service.context_preprocessors.add_avatar_url',
             ],
         },
     },
@@ -138,3 +141,5 @@ STATIC_URL = '/static/'
 
 
 LOGIN_URL = 'user_service:signin'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL =  '/media/'

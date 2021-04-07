@@ -1,5 +1,19 @@
-User : {{ user.username }}
+{% extends "mindfinder/top_bar.html" %}
 
-{% if error %}
-    <p>{{ error }}</p>
-{% endif %}
+{% block content %}
+   <div class="block">
+            <h1 class="header">Обновить изображение профиля</h1>
+            <div class="otstup">
+                <form action="{% url 'user_service:profile' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <img src="{{ avatar_url }}" width="200" height="200" alt="avatar">
+                    <input type="file" class="btnfulled" name="avatar" value="{{ profile.avatar }}">
+                    <input type="text" placeholder="Имя" name="name" value="{{ profile.name }}">
+                    <input type="submit" class="btnfulled">
+                  </form>
+            </div>
+     </div>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+{% endblock %}

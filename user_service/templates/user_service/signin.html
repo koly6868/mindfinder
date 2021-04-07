@@ -2,7 +2,7 @@
 {% load static %}
     <head>
       <title>FindMind</title>
-      <link rel="stylesheet" href="{% static 'user_service/style.css' %}">
+      <link rel="stylesheet" href="{% static 'mindfinder/style.css' %}">
     </head>
     <body>
       <div class="okno">
@@ -23,7 +23,7 @@
           
           <div class="cent">
             <button type="submit" class="btnfulled">Войти</button>
-            <button type="submit" class="btnempty">Регистрация</button>
+            <a href="{% url 'user_service:signup' %}" class="btnempty">Регистрация</a>
           </div>
         </form>
       </div>

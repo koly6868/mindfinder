@@ -14,3 +14,14 @@ class SignForm(forms.Form):
 
     def get_password(self) -> str:
         return self.cleaned_data['password']
+
+
+class UpdateProfileForm(forms.Form):
+    name = forms.CharField(max_length=255, required=False)
+    avatar = forms.ImageField(required=False)
+
+    def get_name(self) -> str:
+        return self.cleaned_data['name']
+    
+    def get_avatar(self):
+        return self.cleaned_data['avatar']

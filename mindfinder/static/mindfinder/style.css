@@ -23,9 +23,7 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-body {
-	line-height: 1;
-}
+
 ol, ul {
 	list-style: none;
 }
@@ -61,7 +59,7 @@ table {
   }
 
   input[type=text]:focus, input[type=password]:focus {
-    background-color: #ddd;
+    background-color: white;
     outline: none;
   }
 
@@ -77,8 +75,7 @@ table {
     cursor: pointer;
     width: auto;
     opacity: 0.9;
-    margin: 0px 0px 10px 0px;
-    
+    margin: 0px 0px 10px 0px;   
   }
 
   .btnempty {
@@ -110,6 +107,11 @@ table {
     margin: 0px;
   }
 
+  body{
+    line-height: 1;
+    overflow: hidden;
+  }
+
 .cent{
     display: flex;
     align-items: center;
@@ -125,38 +127,56 @@ table {
 }
 
 .contright{
-  background-color: aqua;
+  margin: 10px;
   flex-direction: row-reverse;
   display: flex;
-  justify-content: flex-end;
+  justify-content: end;
+  justify-items: end;
+  vertical-align: middle;
+  position: relative;
   
   
 }
 
 .contleft{
+  margin: 10px;
   background-color: inherit;
   display: flex;
   flex-direction: row;
+  vertical-align: middle;
+  position: relative;
+  
 }
 
 .text-left{
   flex-direction: column;
+  vertical-align: middle;
+  margin: 0px 0px 0px 100px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  
 }
 
 .text-right{
-  
   flex-direction: column;
   text-align: right;
+  vertical-align: middle;
+  margin: 0px 100px 0px 0px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .chat-form{
-  grid: 51px / 32px 1fr;
   align-content: center;
   align-items: center;
   border-radius: 10px;
   border-top: 1px;
   padding-left: 10px;
   padding-right: 10px;
+  width: 100%;
+  margin: 20px 10px 0px  0px;
 }
 
 
@@ -165,11 +185,17 @@ table {
   color: white;
   text-align: center;
   border: none;
-  opacity: 0.9;
+  opacity: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%; 
+  height: 80px;
 }
   
 .header{
   font-weight: bold;
+  font-size: 24px;
   margin: 10px 10px 20px 10px;
 }
  
@@ -179,12 +205,63 @@ table {
   margin: 20px 20px 20px 20px;
   padding: 10px 10px;
 }
+
+.block2{
+  overflow: auto;
+  height: 400px;
+  background-color: floralwhite;
+  border-radius: 10px;
+  margin: 20px 20px 20px 20px;
+  padding: 10px 10px;
+}
   
+.scroll{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 600px;
+
+}
+
 .avatar{
-  margin: 10px 20px 10px 10px;
+  padding: 0px;
   position: relative;
   width: 60px;
   border-radius: 60px;
+  vertical-align: middle;
+}
+
+.btnimg{
+  margin: 10px 20px 10px 20px;  
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  background-color: inherit;
+  border: none;
+}
+
+.send{
+  width: 40px;
+  height: 40px;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px;
+}
+
+.btnsend{
+  margin: 3px 10px 10px 10px;
+  cursor: pointer;
+  background-color: inherit;
+  border: 0px;
+  width: 40px;
+  height: 40px;
+}
+
+.btnchat{
+  margin: 5px;
+  width: 400px;
+  border: none;
+  border-radius: 10px;
+  background-color: floralwhite;
 }
 
 h3{
@@ -203,4 +280,39 @@ h3{
 
 .otstup{
   margin-left: 10px;
+}
+
+.otstup-menu{
+  margin-top: 20px;
+}
+.otstup-head{
+  margin-top: 100px;
+}
+
+.otstup-chat{
+  margin-left: 20px;
+  margin-top: 20px;
+  font-family: sans-serif;
+}
+
+h2{
+  font-size: 20px;
+}
+
+p{
+  margin: 0px 0px 10px;
+  font-size: 18px;
+}
+
+.question{
+  margin: 40px 0px;
+}
+
+.vertical-cent{
+  align-content: center;
+  align-items: center;
+}
+
+.hoverhighlite:hover{
+  background-color: rgb(253, 246, 231);
 }

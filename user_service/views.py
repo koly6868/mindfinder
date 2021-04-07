@@ -4,8 +4,10 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import UserProfile
-from .forms import SignForm
+from .forms import SignForm, UpdateProfileForm
 from django.db import transaction
+
+from mindfinder.settings import MEDIA_URL
 
 import user_service.common as common
 import logging
@@ -55,12 +57,13 @@ class SignUp(View):
                 logger.info(f'signup login error: {err}')
                 return render(request, self.template_name, {form : form, 'error': err})
 
-            auth_user = auth.models.User.objects.create_user(username=form.get_login(), password=form.get_password())
-            #user = User(uid=form.get_login(), name=form.get_username())
             try:
                 with transaction.atomic():
-                    auth_user.save()
-                    #user.save()
+                    user = auth.models.User.objects.create_user(username=form.get_login(), password=form.get_password())
+                    user.save()
+                    user_profile = UserProfile(user=user)
+                    user_profile.save()
+
             except Exception as err:
                 logger.info(f'signup unable to create user {err}')
                 return render(request, self.template_name, {form : form, 'error': SOMETHING_WENT_WRONG})
@@ -115,11 +118,41 @@ class SignIn(View):
         return render(request, self.template_name, {form : form, 'error': SOMETHING_WENT_WRONG})
 
 
-class UserProfile(LoginRequiredMixin, View):
+class LogoutView(View):
+    def post(self, request):
+        auth.logout(request)
+        return redirect('user_service:signin')
+    
+    def get(self, request):
+        auth.logout(request)
+        return redirect('user_service:signin')
+
+
+class UserProfileView(LoginRequiredMixin, View):
     template_name = 'user_service/profile.html'
 
     def get(self, request):
-        logger.debug(request.user)
         user = request.user
+        profile = UserProfile.objects.get(user=user)
 
-        return render(request, self.template_name, {'user' : user})
+        logger.info('dad')
+        return render(request, self.template_name,  {'profile' : profile})
+    
+    def post(self, request):
+        user = request.user
+        profile = UserProfile.objects.get(user=user)
+        logger.info('form')
+
+        form = UpdateProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            logger.info(form.get_name())
+            profile.name = form.get_name()
+            avatar = form.get_avatar()
+            if avatar:
+                profile.avatar = avatar
+            profile.save()
+
+            return render(request, self.template_name, {'profile' : profile})
+        
+        logger.info(f'invalid form : {form.errors}')
+        return render(request, self.template_name, {'profile' : profile})
