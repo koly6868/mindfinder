@@ -134,8 +134,8 @@ table {
   justify-items: end;
   vertical-align: middle;
   position: relative;
-  
-  
+  margin-bottom: 30px; 
+  align-items: center;
 }
 
 .contleft{
@@ -145,7 +145,8 @@ table {
   flex-direction: row;
   vertical-align: middle;
   position: relative;
-  
+  margin-bottom: 30px;
+  align-items: center;
 }
 
 .text-left{
@@ -229,6 +230,7 @@ table {
   width: 60px;
   border-radius: 60px;
   vertical-align: middle;
+  margin: 10px;
 }
 
 .btnimg{
@@ -323,4 +325,15 @@ p{
 
 .size{
   width: 340px;
+.sendline {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.smallfont{
+  font-size: 10px;
 }
