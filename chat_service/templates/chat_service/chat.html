@@ -32,7 +32,9 @@ setInterval(test, 1000);
         <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
             <div>
                 <p>{{ message.message }}</p>
+                <div>
                 <span class="time-right smallfont">{{ message.datetime }}</span>
+                </div>
             </div>
         </div>
         {% else %}
@@ -40,7 +42,9 @@ setInterval(test, 1000);
         <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
             <div>
                 <p>{{ message.message }}</p>
-                <span class="time-right smallfont">{{ message.datetime }}</span>
+                <div class="contright">
+                    <span class="time-right smallfont">{{ message.datetime }}</span>
+                </div>
             </div>
         </div>
         {% endif %}

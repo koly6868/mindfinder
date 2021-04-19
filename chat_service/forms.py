@@ -13,7 +13,11 @@ class NewMessageForm(forms.Form):
     chat_id = forms.IntegerField()
     owner_id = forms.IntegerField()
     message = forms.CharField(max_length=MESSAGE_MAX_LEN,
-                              widget=forms.TextInput(attrs={'placeholder': 'Введите сообщение'}))
+                              widget=forms.TextInput(attrs={
+                                  'placeholder': 'Введите сообщение',
+                                  'autofocus': 'autofocus',
+                              }
+                              ))
 
     def get_chat_id(self):
         return self.cleaned_data['chat_id']

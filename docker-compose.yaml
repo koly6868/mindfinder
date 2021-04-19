@@ -11,21 +11,16 @@ services:
         env_file:
             - .env
         depends_on: 
-            - neobase
+            - redis
             - postgres
         ports:
             - "8000:8000"
     
-    neobase:
-        image : amd64/neo4j:3.5
-        volumes:
-            - ./data/neobase:/data
-        env_file:
-            - .env
-        ports:
-            - "7687:7687"
-            - "7474:7474"
-    
+    redis:
+        image: redis
+        ports: 
+            - "6379:6379"
+
     postgres:
         image: postgres
         env_file:
@@ -46,7 +41,6 @@ services:
         env_file:
             - .env
         depends_on: 
-            - neobase
             - postgres
     
     migrate:
@@ -60,22 +54,5 @@ services:
         env_file:
             - .env
         depends_on: 
-            - neobase
             - postgres
-
-    install_labels:
-        image: "mindfiner"
-        build: 
-            context: .
-            dockerfile: Dockerfile
-        command: "python manage.py install_labels"
-        volumes:
-            - .:/app
-        env_file:
-            - .env
-        depends_on: 
-            - neobase
-            - postgres
-        
-    
     

@@ -5,7 +5,9 @@
         <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
             <div>
                 <p>{{ message.message }}</p>
+                <div>
                 <span class="time-right smallfont">{{ message.datetime }}</span>
+                </div>
             </div>
         </div>
         {% else %}
@@ -13,7 +15,9 @@
         <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
             <div>
                 <p>{{ message.message }}</p>
+                <div class="contright">
                 <span class="time-right smallfont">{{ message.datetime }}</span>
+                </div>
             </div>
         </div>
         {% endif %}

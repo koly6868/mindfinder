@@ -9,11 +9,15 @@ from .forms import CreateChatForm, NewMessageForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from user_service.models import UserProfile
-
+from polls_service.models import Answer
 from datetime import datetime
+from django.db import connection
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 import logging
 
 
+DEFAULT_CACHE_TIME = 10
 logger = logging.getLogger(__name__)
 
 
@@ -99,10 +103,10 @@ class ChatAPIView(LoginRequiredMixin, View):
 
         messages = Message.objects.filter(chat=chat.id).all()
         context = {
-            'user' : user,
+            'user': user,
             'messages': messages,
         }
-        
+
         if context is None:
             return HttpResponseNotFound('something went wrong')
 
@@ -112,11 +116,37 @@ class ChatAPIView(LoginRequiredMixin, View):
 class CreateChatView(LoginRequiredMixin, View):
     template_name = 'chat_service/new.html'
 
+    @method_decorator(cache_page(DEFAULT_CACHE_TIME))
     def get(self, request):
         user = request.user
         u = User.objects.first()
-        profiles = UserProfile.objects.exclude(user=user)[:20]
+        profiles = UserProfile.objects.all()
+        user = [e for e in profiles if e.user.id == user.id][0]
+        profiles = [e for e in profiles if e.user.id != user.user.id]
+        profiles = self.__rank(user, profiles)
         return render(request, self.template_name, {'profiles': profiles})
+
+    def __rank(self, user, profiles):
+        sql = """SELECT t.user_id, count(*) 
+                    FROM polls_service_answer
+                    JOIN polls_service_answer as t 
+                    ON polls_service_answer.task_id = t.task_id AND
+                        polls_service_answer.user_id != t.user_id AND
+                        polls_service_answer.option_id = t.option_id
+                    WHERE polls_service_answer.user_id = %s
+                    GROUP BY polls_service_answer.user_id, t.user_id"""
+        rank_map = {}
+        with connection.cursor() as cursor:
+            cursor.execute(sql, [user.id])
+            rows = cursor.fetchall()
+
+            for row in rows:
+                uid = int(row[0])
+                r = int(row[1])
+                rank_map[uid] = r
+        profiles = sorted(
+            profiles, key=lambda x: rank_map.get(x.id, 0), reverse=True)
+        return profiles
 
     def post(self, request):
         form = CreateChatForm(request.POST)
