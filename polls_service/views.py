@@ -15,7 +15,6 @@ DEFAULT_CACHE_TIME = 60
 class TestsView(View):
     template_name = 'polls_service/tests.html'
 
-    @method_decorator(cache_page(DEFAULT_CACHE_TIME))
     def get(self, request):
         logger.info(request.user)
         user = UserProfile.objects.get(user=request.user)

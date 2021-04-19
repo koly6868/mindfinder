@@ -18,9 +18,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 LOGIN_ALREADY_EXISTS_ERROR = 'login already exists'
 SOMETHING_WENT_WRONG = 'something went wrong'
-TOO_SHORT_ERROR  = 'password must be 8 symbols or greater'
-SYMBOLS_NOT_ALLOWED_ERROR = 'symbols not allowed'
-USER_DOES_NOT_EXISTS_ERROR = 'user does not exists'
+TOO_SHORT_ERROR  = 'должен быть 8 символов или больше'
+SYMBOLS_NOT_ALLOWED_ERROR = 'недопустимые символы'
+USER_DOES_NOT_EXISTS_ERROR = 'неправильный логин или пароль'
 
 
 def create_user(username, password) -> auth.models.User:
@@ -75,19 +75,19 @@ class SignUp(View):
     
     def _check_password(self, password : str):
         if len(password) < 8:
-            return f'paswword {TOO_SHORT_ERROR}'
+            return f'пароль {TOO_SHORT_ERROR}'
         
         if not common.is_str_allowed(password):
-            return f'password {SYMBOLS_NOT_ALLOWED_ERROR}'
+            return f'пароль {SYMBOLS_NOT_ALLOWED_ERROR}'
 
         return ''
     
     def _check_login(self, login : str):
         if not len(login):
-            return f'login {TOO_SHORT_ERROR}'
+            return f'логин {TOO_SHORT_ERROR}'
         
         if not common.is_str_allowed(login):
-            return f'login {SYMBOLS_NOT_ALLOWED_ERROR}'
+            return f'логин {SYMBOLS_NOT_ALLOWED_ERROR}'
             
         return ''
 

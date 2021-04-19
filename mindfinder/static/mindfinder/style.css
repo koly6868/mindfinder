@@ -338,3 +338,7 @@ p{
 .smallfont{
   font-size: 10px;
 }
+
+.error{
+  color: rgb(252, 102, 102);
+}

@@ -20,7 +20,9 @@
             <input type="password" placeholder="Пароль" name="password" required>
           
           </div>
-          
+            {% if error %}
+              <p class="error smallfont">{{ error }}</p>
+            {% endif %}
           <div class="cent">
             <button type="submit" class="btnfulled">Войти</button>
             <a href="{% url 'user_service:signup' %}" class="btnempty">Регистрация</a>
