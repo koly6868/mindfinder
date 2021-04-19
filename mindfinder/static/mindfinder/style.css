@@ -323,6 +323,8 @@ p{
   background-color: rgb(199, 199, 199);
 }
 
+.size{
+  width: 340px;
 .sendline {
   width: 100%;
   display: flex;
