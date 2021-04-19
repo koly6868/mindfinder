@@ -7,9 +7,23 @@
                 <form action="{% url 'user_service:profile' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <img src="{{ avatar_url }}" width="200" height="200" alt="avatar">
-                    <input type="file" class="btnfulled" name="avatar" value="{{ profile.avatar }}">
-                    <input type="text" placeholder="Имя" name="name" value="{{ profile.name }}">
-                    <input type="submit" class="btnfulled">
+
+                    <div class="otstup-menu">
+                        <div class="container">
+                            <input type="file" class="btnfulled" name="avatar" value="{{ profile.avatar }}">
+                        </div>
+                    </div>
+                    
+                    <div class="container">
+                        <div class='otstup-menu'>
+                            <label class='' for="password"><b>Введите имя</b></label>
+                        </div>
+                        <div class="size">
+                            <input type="text" placeholder="Имя" name="name" value="{{ profile.name }}">
+                        </div>
+                    
+                        <input type="submit" class="btnfulled">
+                    </div>
                   </form>
             </div>
      </div>
