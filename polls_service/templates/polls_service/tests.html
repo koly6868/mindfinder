@@ -1,0 +1,32 @@
+{% extends "mindfinder/top_bar.html" %}
+
+
+{% block content %}
+<div class="cent">
+    {% if tests %}
+    <ul>
+    {% for test, passed in tests %}
+        <li>
+            {% if not passed%}
+            <a href="{% url 'polls_service:test' test_id=test.id %}">
+                <div class="btnchat hoverhighlite"> 
+                    <div class="contleft">
+                        <p class="otstup-chat">{{forloop.counter}}) {{ test.name }}</p>
+                    </div>
+                </div>
+            </a>
+            {% else %}
+                <div class="btnchat locked"> 
+                    <div class="contleft">
+                        <p class="otstup-chat">{{forloop.counter}}) {{ test.name }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>У вас нет незаконченных опросов</p>
+    {% endif %}
+</div>
+{% endblock %}

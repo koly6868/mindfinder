@@ -1,0 +1,62 @@
+{% extends "mindfinder/top_bar.html" %}
+{% load static %}
+
+{% block headers %}
+<script>
+function test(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var element = document.getElementById("messages");
+        element.innerHTML = this.response
+    }
+    };
+    xhttp.open("GET", "{% url 'chat_service:api_messages' chat_id=chat.id  %}", true);
+    xhttp.send();
+    return 'ok'
+}
+setInterval(test, 1000);
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="block">
+    <div>
+    <h1 class="header">{{ chat.name }}</h1>
+    </div>
+    <div id="messages" class="block2">
+    {% for message in messages %}
+        {% if message.owner.id != user.id %}
+        <div class="contleft">
+        {% else %}
+        <div class="contright">
+        {% endif %}
+            <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
+            <div class="text-left">
+                <p>{{ message.message }}</p>
+                <span class="time-right">{{ message.datetime }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <div id="bottom"></div>
+    </div>
+      <div class="chat-form">
+        <div class="contleft">
+        <form action="{% url 'chat_service:chat' chat_id=chat.id %}" method="post">
+        {% csrf_token %}
+            <input name="chat_id" type="hidden" value="{{ chat.id }}">
+            <input name="owner_id" type="hidden" value="{{ user.id }}">
+            {{ form.message}}
+            <button class="btnsend" type="submit">
+                <img class="send" src="{% static 'mindfinder/send_icon.png' %}" alt="Avatar">
+            </button>
+        </form>
+        </div>
+      </div>
+</div>
+<script>
+var a = document.getElementById("bottom")
+a.scrollIntoView();
+</script>
+{% endblock %}

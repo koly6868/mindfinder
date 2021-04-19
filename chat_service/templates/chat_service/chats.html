@@ -4,21 +4,17 @@
 {% block content %}
 <div class="cent">
     <ul>
-    {% for chat in chats %}
+    {% for chatdata in chats %}
         <li>
-                <form action="{% url 'chat_service:new' %}" method="post">
-                {% csrf_token %}
-                    <input type="hidden" name="chat_id" value="{{ chat.id }}">
-
-                    <button class="btnchat hoverhighlite" type="submit">
-                        <img class="avatar" src="{{ media_url|add:profile.avatar.name }}" alt="Avatar">
-                        <div class="contleft">
-                            <p class="otstup-chat">{{ chat.name }}</p>
-                        </div>
-                    </button>
-                </form>
-
-            </li>
+            <a href="{% url 'chat_service:chat' chat_id=chatdata.chat.id %}">
+                <div class="btnchat hoverhighlite"> 
+                    <img class="avatar" src="{{ media_url|add:chatdata.avatar }}" alt="Avatar">
+                    <div class="contleft">
+                        <p class="otstup-chat">{{ chatdata.chat.name }}</p>
+                    </div>
+                </div>
+            </a>
+        </li>
     {% endfor %}
     </ul>
 </div>

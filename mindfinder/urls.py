@@ -18,14 +18,12 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from .settings import MEDIA_ROOT, MEDIA_URL, DEBUG
 
-from user_service import urls
-import chat_service
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('usersrevice/', include('user_service.urls')),
     path('chatsservice/', include('chat_service.urls')),
+    path('pollssevice/', include('polls_service.urls')),
 ]
 
 if DEBUG:

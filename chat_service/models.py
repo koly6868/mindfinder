@@ -16,7 +16,7 @@ class Chat(models.Model):
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     message = models.CharField('Message', max_length=MESSAGE_MAX_LEN, blank=False)
-    owner = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     datetime = models.DateTimeField('Message sent datetime', auto_now=True)
 
 

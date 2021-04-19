@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseNotFound
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from user_service.models import UserProfile
 from django.contrib.auth.models import User
 from .models import Chat, Message
-from .forms import CreateChatForm
+from .forms import CreateChatForm, NewMessageForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from user_service.models import UserProfile
@@ -23,9 +24,12 @@ class ChatListView(LoginRequiredMixin, View):
         user = UserProfile.objects.get(user=request.user)
         chats = Chat.objects.filter(participants__id__contains=user.id).all()
         logger.info(f'retrived {len(chats)} chats for user {user}')
-
-        return render(request, self.template_name, {'chats': chats, 'error' : ''})
-
+        chats = [{
+            'chat': chat,
+            'avatar': chat.participants.exclude(id=user.id).first().avatar.name,
+        } for chat in chats]
+        logger.info(chats)
+        return render(request, self.template_name, {'chats': chats, 'error': ''})
 
 
 class ChatView(LoginRequiredMixin, View):
@@ -33,33 +37,76 @@ class ChatView(LoginRequiredMixin, View):
 
     def get(self, request, chat_id):
         user = UserProfile.objects.get(user=request.user)
-        chat = Chat.objects.filter(
-            participants__contains=user,
-            id=chat_id).first()
-        
-        if chat is None:
-            chat_err = 'chat does not exists'
-            return render(request, self.template_name, {'chat': None, 'error' : chat_err})
-        
-        return render(request, self.template_name, {'chat': chat, 'error' : ''})
-    
-    def post(self, request):
-        form = CreateChatForm(request.POST)
+        form = NewMessageForm()
+        context = self.__prepare_context(request, chat_id, user, form)
 
+        if context is None:
+            return HttpResponseNotFound('something went wrong')
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, chat_id):
+        user = UserProfile.objects.get(user=request.user)
+
+        form = NewMessageForm(request.POST)
         if form.is_valid():
-            first_user = request.user
-            second_user_id = form.get_target_user_id()
-            chat_exists = Chat.objects.annotate(pc=Count('participants')) \
-                .filter(pc=2).filter(participants__id__contains=first_user.id) \
-                .filter(participants__id__contains=second_user_id) \
-                .exists()
+            chat = Chat.objects.filter(id=form.get_chat_id()).first()
+            if chat is None:
+                return HttpResponseNotFound('wrong chat')
 
-            if chat_exists:
-                logger.info(f'chat between {first_user.id} and {second_user_id} exists')
-                return render(request, self.template_name, {'form' : form, 'error' : 'chat exists'})
-            
-            return redirect()
+            if not chat.participants.filter(id=user.id).exists():
+                return HttpResponseNotFound('wrong user')
 
+            message = Message(
+                chat=chat,
+                message=form.get_message(),
+                owner=user
+            )
+            message.save()
+            return redirect('chat_service:chat', chat_id=chat.id)
+
+        context = self.__prepare_context(request, chat_id, user, form)
+        return render(request, self.template_name, context)
+
+    def __prepare_context(self, request, chat_id, user, form):
+        chat = Chat.objects.filter(
+            participants__id__contains=user.id,
+            id=chat_id).first()
+
+        if chat is None:
+            return None
+
+        messages = Message.objects.filter(chat=chat.id).all()
+        context = {
+            'chat': chat,
+            'user': user,
+            'messages': messages,
+            'form': form,
+        }
+        return context
+
+
+class ChatAPIView(LoginRequiredMixin, View):
+    template_name = 'chat_service/chat_api.html'
+
+    def get(self, request, chat_id):
+        user = UserProfile.objects.get(user=request.user)
+        chat = Chat.objects.filter(
+            participants__id__contains=user.id,
+            id=chat_id).first()
+        if chat is None:
+            return HttpResponseNotFound('something went wrong')
+
+        messages = Message.objects.filter(chat=chat.id).all()
+        context = {
+            'user' : user,
+            'messages': messages,
+        }
+        
+        if context is None:
+            return HttpResponseNotFound('something went wrong')
+
+        return render(request, self.template_name, context)
 
 
 class CreateChatView(LoginRequiredMixin, View):
@@ -69,7 +116,7 @@ class CreateChatView(LoginRequiredMixin, View):
         user = request.user
         u = User.objects.first()
         profiles = UserProfile.objects.exclude(user=user)[:20]
-        return render(request, self.template_name, {'profiles' : profiles})
+        return render(request, self.template_name, {'profiles': profiles})
 
     def post(self, request):
         form = CreateChatForm(request.POST)
@@ -83,13 +130,14 @@ class CreateChatView(LoginRequiredMixin, View):
                 .exists()
 
             if chat_exists:
-                logger.info(f'chat between {first_user.id} and {second_user.id} exists')
+                logger.info(
+                    f'chat between {first_user.id} and {second_user.id} exists')
                 return redirect('chat_service:chats')
 
             chat = Chat(
-                        name=f'{first_user.name},{second_user.name}',
-                        start_date=datetime.now(),
-                        )
+                name=f'{first_user.name},{second_user.name}',
+                start_date=datetime.now(),
+            )
             chat.save()
             try:
                 chat.participants.add(first_user.id)

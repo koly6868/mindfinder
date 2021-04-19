@@ -1,0 +1,14 @@
+
+    {% for message in messages %}
+        {% if message.owner.id != user.id %}
+        <div class="contleft">
+        {% else %}
+        <div class="contright">
+        {% endif %}
+            <img class="avatar" src="{{ message.owner.avatar.url }}" alt="Avatar">
+            <div class="text-left">
+                <p>{{ message.message }}</p>
+                <span class="time-right">{{ message.datetime }}</span>
+            </div>
+        </div>
+    {% endfor %}

@@ -1,0 +1,26 @@
+{% extends "mindfinder/top_bar.html" %}
+
+{% block content%} 
+        <div class="block">
+
+            <h1 class="header">{{ test.name }}</h1>
+
+            <form action="{% url 'polls_service:test' test_id=test.id %}" method="post">
+            {% csrf_token %}
+            {% for task, options, answer in tasks %}
+                <div class="question">
+                    <h2 class="header">{{ task.text }}</h2>
+                    {% for option in options %}
+                    {% if answer.option and answer.option == option %}
+                    <p><input name="{{ task.id }}" type="radio" value="{{ option.id }}" checked >{{ option.text }}</p>
+                    {% else %}
+                    <p><input name="{{ task.id }}" type="radio" value="{{ option.id }}">{{ option.text }}</p>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+                <button type="sumbit" class="btnfulled">Отправить</button>
+            </form>
+        </div>
+{% endblock %}
